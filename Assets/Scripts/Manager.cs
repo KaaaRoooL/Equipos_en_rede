@@ -16,11 +16,8 @@ namespace HelloWorld
             else
             {
                 StatusLabels();
-
                 //SubmitNewPosition();
-                SubmitNewTeam1();
-                SubmitNewTeam2();
-                SubmitNewNoTeam();
+                SubmitTeamRequestServerRpc();
             }
 
             GUILayout.EndArea();
@@ -43,26 +40,64 @@ namespace HelloWorld
             GUILayout.Label("Mode: " + mode);
         }
 
-    /*static void SubmitNewPosition()
+    static void SubmitTeamRequestServerRpc()
         {
-            if (GUILayout.Button(NetworkManager.Singleton.IsServer ? "Move" : "Request Position Change"))
+            if (GUILayout.Button(NetworkManager.Singleton.IsServer ? "Team Change" : "Request Team Change"))
             {
                 if (NetworkManager.Singleton.IsServer && !NetworkManager.Singleton.IsClient )
                 {
                     foreach (ulong uid in NetworkManager.Singleton.ConnectedClientsIds)
-                        NetworkManager.Singleton.SpawnManager.GetPlayerNetworkObject(uid).GetComponent<Player>().Move();
+                        NetworkManager.Singleton.SpawnManager.GetPlayerNetworkObject(uid).GetComponent<Player>().Team();
                 }
                 else
                 {
                     var playerObject = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject();
                     var player = playerObject.GetComponent<Player>();
-                    player.Move();
+                    player.Team(0);
                 }
             }
-        }*/
+        }
 
 
-        static void SubmitNewTeam1()
+        static void SubmitTeamRequestServerRpc()
+        {
+            if (GUILayout.Button(NetworkManager.Singleton.IsServer ? "Team Change" : "Request Team Change"))
+            {
+                if (NetworkManager.Singleton.IsServer && !NetworkManager.Singleton.IsClient )
+                {
+                    foreach (ulong uid in NetworkManager.Singleton.ConnectedClientsIds)
+                        NetworkManager.Singleton.SpawnManager.GetPlayerNetworkObject(uid).GetComponent<Player>().Team();
+                }
+                else
+                {
+                    var playerObject = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject();
+                    var player = playerObject.GetComponent<Player>();
+                    player.Team(1);
+                }
+            }
+        }
+
+
+         static void SubmitTeamRequestServerRpc()
+        {
+            if (GUILayout.Button(NetworkManager.Singleton.IsServer ? "Team Change" : "Request Team Change"))
+            {
+                if (NetworkManager.Singleton.IsServer && !NetworkManager.Singleton.IsClient )
+                {
+                    foreach (ulong uid in NetworkManager.Singleton.ConnectedClientsIds)
+                        NetworkManager.Singleton.SpawnManager.GetPlayerNetworkObject(uid).GetComponent<Player>().Team();
+                }
+                else
+                {
+                    var playerObject = NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject();
+                    var player = playerObject.GetComponent<Player>();
+                    player.Team(2);
+                }
+            }
+        }
+
+
+        /*static void SubmitNewTeam1()
         {
             if (GUILayout.Button(NetworkManager.Singleton.IsServer ? "Team Change 1" : "Request Team Change 1"))
             {
@@ -116,7 +151,7 @@ namespace HelloWorld
                     player.NoTeamChange();
                 }
             }
-        }
+        }*/
 
 
     }

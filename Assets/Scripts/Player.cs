@@ -9,22 +9,37 @@ namespace HelloWorld
         public NetworkVariable<Vector3> Position = new NetworkVariable<Vector3>();
         public NetworkVariable<Color> ColorPlayer = new NetworkVariable<Color>();
         public static List<Color> listaColores = new List<Color>();
+
+        public static List<int> teamMembers = new List<int>();
+
+        public NetworkVariable<int> EquipoTeam = new NetworkVariable<int>();
+
+        private int equipo;
+
+        private int maxPlayers = 2;
+       
         Renderer rend;
              
         void Start() {       
             rend = GetComponent<MeshRenderer>();        
             Position.OnValueChanged += OnPositionChange;
-            ColorPlayer.Value = listaColores[2];
+            ColorPlayer.OnValueChanged += OnColorChange;
+            ColorPlayer.Value = listaColores[0];
         }
 
         public void llenarListaColores(){
+            listaColores.Add(Color.white);
             listaColores.Add(Color.blue); 
             listaColores.Add(Color.red);
-            listaColores.Add(Color.white);       
+                   
         }
 
         public void OnPositionChange(Vector3 previousValue, Vector3 newValue){
             transform.position = Position.Value;
+        }
+
+        public void OnColorChange(Color oldColor, Color newColor){
+            rend.material.color = ColorPlayer.Value;
         }
 
         public override void OnNetworkSpawn()
@@ -35,48 +50,38 @@ namespace HelloWorld
             } 
             if (IsOwner)
             {
-                TeamChange1();
-                TeamChange2();
-                NoTeamChange();
+                Team();
             }
         }
 
-        public void TeamChange1(){        
-            SubmitColorTeam1RequestServerRpc();        
-        }
-
-        public void TeamChange2(){  
-            SubmitColorTeam2RequestServerRpc();               
-        }
-
-        public void NoTeamChange(){
-            SubmitColorNoTeamRequestServerRpc();
-        }
-        
-        [ServerRpc]
-        void SubmitColorTeam1RequestServerRpc(ServerRpcParams rpcParams = default)
-        {             
-            Position.Value = new Vector3(Random.Range(-0.5f, -9f), 1f, Random.Range(-3f, 4f));
-            ColorPlayer.Value = listaColores[0];         
+        public void Team(){        
+            SubmitTeamRequestServerRpc(equipo);        
         }
 
         [ServerRpc]
-        void SubmitColorTeam2RequestServerRpc(ServerRpcParams rpcParams = default)
-        {
-            Position.Value = new Vector3(Random.Range(10f, 18f), 1f, Random.Range(-3f, 4f));
-            ColorPlayer.Value = listaColores[1];        
+        void SubmitTeamRequestServerRpc(int equipo, ServerRpcParams rpcParams = default)
+        {                        
+            if(equipo == 0 || equipo == 1 || equipo == 2 || maxPlayers < 2){               
+                if(equipo == 0){
+                    Position.Value = new Vector3(Random.Range(0.6f, 9f), 1f, Random.Range(-3f, 4f));
+                    ColorPlayer.Value = listaColores[0];                         
+                    EquipoTeam.Value = 0;                                     
+                }
+                if(equipo == 1){
+                    Position.Value = new Vector3(Random.Range(10f, 18f), 1f, Random.Range(-3f, 4f));
+                    ColorPlayer.Value = listaColores[1];
+                    EquipoTeam.Value = 1;
+                }
+                if(equipo == 2){
+                    Position.Value = new Vector3(Random.Range(-0.5f, -9f), 1f, Random.Range(-3f, 4f));
+                    ColorPlayer.Value = listaColores[2];                  
+                    EquipoTeam.Value = 2;
+                }
+            }
         }
-
-        [ServerRpc]
-        void SubmitColorNoTeamRequestServerRpc(ServerRpcParams rpcParams = default)
-        {
-            Position.Value = new Vector3(Random.Range(0.6f, 9f), 1f, Random.Range(-3f, 4f));
-            ColorPlayer.Value = listaColores[2];       
-        }
-
         void Update()
         {
-            rend.material.color = ColorPlayer.Value;
+            
         }
     }
 }
