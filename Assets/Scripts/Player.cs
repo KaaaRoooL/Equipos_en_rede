@@ -12,9 +12,8 @@ namespace HelloWorld
 
         public static List<int> teamMembers = new List<int>();
 
-        public NetworkVariable<int> EquipoTeam = new NetworkVariable<int>();
+        public NetworkVariable<int> teamPlayer = new NetworkVariable<int>();
 
-        private int equipo;
 
         private int maxPlayers = 2;
        
@@ -23,8 +22,8 @@ namespace HelloWorld
         void Start() {       
             rend = GetComponent<MeshRenderer>();        
             Position.OnValueChanged += OnPositionChange;
-            ColorPlayer.OnValueChanged += OnColorChange;
-            ColorPlayer.Value = listaColores[0];
+            ColorPlayer.OnValueChanged += OnColorChange;    
+                  
         }
 
         public void llenarListaColores(){
@@ -50,35 +49,38 @@ namespace HelloWorld
             } 
             if (IsOwner)
             {
-                Team();
+                Team(-1);
             }
         }
 
-        public void Team(){        
+        public void Team(int equipo){        
             SubmitTeamRequestServerRpc(equipo);        
         }
 
         [ServerRpc]
         void SubmitTeamRequestServerRpc(int equipo, ServerRpcParams rpcParams = default)
-        {                        
-            if(equipo == 0 || equipo == 1 || equipo == 2 || maxPlayers < 2){               
-                if(equipo == 0){
-                    Position.Value = new Vector3(Random.Range(0.6f, 9f), 1f, Random.Range(-3f, 4f));
-                    ColorPlayer.Value = listaColores[0];                         
-                    EquipoTeam.Value = 0;                                     
-                }
-                if(equipo == 1){
-                    Position.Value = new Vector3(Random.Range(10f, 18f), 1f, Random.Range(-3f, 4f));
-                    ColorPlayer.Value = listaColores[1];
-                    EquipoTeam.Value = 1;
-                }
-                if(equipo == 2){
-                    Position.Value = new Vector3(Random.Range(-0.5f, -9f), 1f, Random.Range(-3f, 4f));
-                    ColorPlayer.Value = listaColores[2];                  
-                    EquipoTeam.Value = 2;
-                }
+        {          
+
+            if(equipo == -1){
+
+                Position.Value = new Vector3(Random.Range(0.6f, 9f), 1f, Random.Range(-3f, 4f));
+                ColorPlayer.Value = listaColores[0];     
+                teamPlayer.Value = 0;
+            } else if(equipo == 0){
+                Position.Value = new Vector3(Random.Range(0.6f, 9f), 1f, Random.Range(-3f, 4f));
+                ColorPlayer.Value = listaColores[0];                         
+                teamPlayer.Value = 0;                                     
+            } else if(equipo == 1){
+                Position.Value = new Vector3(Random.Range(10f, 18f), 1f, Random.Range(-3f, 4f));
+                ColorPlayer.Value = listaColores[1];
+                teamPlayer.Value = 1;
+            } else if(equipo == 2){
+                Position.Value = new Vector3(Random.Range(-0.5f, -9f), 1f, Random.Range(-3f, 4f));
+                ColorPlayer.Value = listaColores[2];                  
+                teamPlayer.Value = 2;
             }
-        }
+        }           
+    
         void Update()
         {
             
