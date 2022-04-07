@@ -45,7 +45,7 @@ namespace HelloWorld
         {
             if(IsServer && IsOwner){
                 llenarListaColores();
-                llenarListaTeamMembers()
+                llenarListaTeamMembers();
                 
             } 
             if (IsOwner)
